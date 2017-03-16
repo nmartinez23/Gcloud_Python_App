@@ -37,6 +37,15 @@ class MainPage(Handler):
     def get(self):
         self.render("shopping_list.html")
 
+    # code below used to test jinja syntax
+    # test code is in shopping_list.html
+    # def get(self):
+    #     n = self.request.get("n")
+    #     if n:
+    #         n = int(n)
+    #     self.render("shopping_list.html", n=n)
+
+
         # output = form_html
         # output_hidden = ""
 
