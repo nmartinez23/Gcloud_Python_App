@@ -15,25 +15,91 @@
 import webapp2
 
 form="""
-<form method="post" action="/testform">
-    <input name="q">
+<form method="post">
+    What is your birthday?
+    <br>
+    <label> Month <input type="text" name="month"></label>
+    <label> Day <input type="text" name="day"></label>
+    <label> Year <input type="text" name="year"></label>
+    <div style="color: red">%(error)s</div>
+    <br>
+    <br>
     <input type="submit">
 </form>
 """
 
 class MainPage(webapp2.RequestHandler):
+    def write_form(self, error=""):
+        self.response.out.write(form % {"error": error})
+
     def get(self):
-        # self.response.headers['Content-Type'] = 'text/plain'
-        self.response.out.write(form)
+        self.write_form()
 
-class TestHandler(webapp2.RequestHandler):
     def post(self):
-        # q = self.request.get("q")
-        # self.response.out.write(q)
+        user_month = valid_month(self.request.get('month'))
+        user_day = valid_day(self.request.get('day'))
+        user_year = valid_year(self.request.get('year'))
 
-        # shows HTTP request information in the browser
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.out.write(self.request)
+        if not (user_month and user_day and user_year):
+            self.write_form("That doesn't look valid to me, friend.")
+        else:
+            self.response.out.write("That's a totally valid date!")
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage),('/testform', TestHandler)], debug=True)
+app = webapp2.WSGIApplication([('/', MainPage)], debug=True)
+
+# months = ['January',
+#           'February',
+#           'March',
+#           'April',
+#           'May',
+#           'June',
+#           'July',
+#           'August',
+#           'September',
+#           'October',
+#           'November',
+#           'December']
+
+# month_abbvs = dict((m[:3].lower(), m) for m in months)
+
+# def valid_month(month):
+#         if month:
+#             short_month = month[:3].lower()
+#             return month_abbvs.get(short_month)
+
+#     def valid_day(day):
+#     if day and day.isdigit():
+#         day = int(day)
+#         if day > 0 and day <=31:
+#             return day
+
+#     def valid_year(year):
+#     if year and year.isdigit():
+#         year = int(year)
+#         if year > 1900 and year <= 2020:
+#             return year
+
+
+# form="""
+# <form method="post" action="/testform">
+#     <input name="q">
+#     <input type="submit">
+# </form>
+# """
+
+# class MainPage(webapp2.RequestHandler):
+#     def get(self):
+#         # self.response.headers['Content-Type'] = 'text/plain'
+#         self.response.out.write(form)
+
+# class TestHandler(webapp2.RequestHandler):
+#     def post(self):
+#         # q = self.request.get("q")
+#         # self.response.out.write(q)
+
+#         # shows HTTP request information in the browser
+#         self.response.headers['Content-Type'] = 'text/plain'
+#         self.response.out.write(self.request)
+
+# app = webapp2.WSGIApplication([
+#     ('/', MainPage),('/testform', TestHandler)], debug=True)
